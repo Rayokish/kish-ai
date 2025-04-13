@@ -8,7 +8,7 @@ const host = '0.0.0.0';
 const apiKey = "AIzaSyDL8lTQK78cwDfySVT_8JDbDXkgJyUcfV4"; // Replace with your actual API key
 const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
+  model: "gemini-1.5-pro-latest",
   generationConfig: {
     temperature: 0.3,
     topP: 0.95,
