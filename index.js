@@ -8,7 +8,7 @@ const host = '0.0.0.0';
 const apiKey = "AIzaSyAuw9QCvV-MSYKGl1FLpDetJyKF7_5vj6s"; // Replace with your actual API key
 const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
+  model: "gemini-1.5-pro",
   generationConfig: {
     temperature: 0.3,
     topP: 0.95,
@@ -49,14 +49,32 @@ app.get('/', (req, res) => {
   res.send("AI Gemini API is running.");
 });
 
-app.route('/ai') // Changed the endpoint to /ai
+// Add this new endpoint while keeping your existing /ai endpoint
+app.get('/gpt', async (req, res) => {
+  const query = req.query.query;
+  if (!query) {
+    return res.status(400).send("No query provided");
+  }
+
+  try {
+    const prompt = `${SYSTEM_INSTRUCTION}\n\nHuman: ${query}`;
+    const result = await model.generateContent(prompt);
+    const response = result?.response?.candidates?.[0]?.content || "No response generated.";
+    return res.status(200).send(response);
+  } catch (e) {
+    console.error("Error:", e);
+    return res.status(500).send("Failed to generate response");
+  }
+});
+
+// Your existing /ai endpoint remains unchanged
+app.route('/ai')
   .get(async (req, res) => {
     const query = req.query.query;
     if (!query) {
       return res.status(400).send("No query provided");
     }
 
-    // Check if the query is asking for time, date, or year
     const lowerCaseQuery = query.toLowerCase();
     if (lowerCaseQuery.includes("time") || lowerCaseQuery.includes("date") || lowerCaseQuery.includes("year")) {
       const { time, date, year } = getCurrentDateTime();
@@ -86,7 +104,6 @@ app.route('/ai') // Changed the endpoint to /ai
       return res.status(400).send("No query provided");
     }
 
-    // Check if the query is asking for time, date, or year
     const lowerCaseQuery = query.toLowerCase();
     if (lowerCaseQuery.includes("time") || lowerCaseQuery.includes("date") || lowerCaseQuery.includes("year")) {
       const { time, date, year } = getCurrentDateTime();
