@@ -5,7 +5,7 @@ const app = express();
 const port = 8080;
 const host = '0.0.0.0';
 
-const apiKey = "AIzaSyDL8lTQK78cwDfySVT_8JDbDXkgJyUcfV4"; // Replace with your actual API key
+const apiKey = "AIzaSyAuw9QCvV-MSYKGl1FLpDetJyKF7_5vj6s"; // Replace with your actual API key
 const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-pro-latest",
